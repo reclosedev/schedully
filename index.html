@@ -1,6 +1,7 @@
 <html>
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.min.js"></script>
+    <script src="/data.js"></script>
     <script src="/app.js"></script>
     </head>
     <body ng-app="myApp">
@@ -8,6 +9,12 @@
       <div>
         Package name: <input ng-model="vm.package_name" />
         <input type="submit" value="ok" ng-click="vm.getData()"/>
+        {{vm.appDB.schedules.length}}/
+        <div ng-repeat="schedule in vm.appDB.schedules">
+          <div>{{schedule.from}} -> {{schedule.to}}</div>
+          <ul>
+            <li ng-repeat="time in schedule.times">{{time | date:"HH:mm"}}</li>
+          </ul>
       </div>
     </div>
     </body>

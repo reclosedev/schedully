@@ -50,5 +50,5 @@ dates = [datetime.datetime(2000, 1, 2 if x[0] == 0 else 1, hour=x[0], minute=x[1
 
 print """//data.js:
 
-APP_DB = {}
+window.APP_DB = {}
 """.format(json.dumps({"schedules": schedules, "locations": locations}))
