@@ -1,21 +1,24 @@
 <html>
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.min.js"></script>
-    <script src="/data.js"></script>
-    <script src="/app.js"></script>
-    </head>
-    <body ng-app="myApp">
-    <div ng-controller="MyCtrl as vm">
-      <div>
-        Package name: <input ng-model="vm.package_name" />
-        <input type="submit" value="ok" ng-click="vm.getData()"/>
-        {{vm.appDB.schedules.length}}/
-        <div ng-repeat="schedule in vm.appDB.schedules">
-          <div>{{schedule.from}} -> {{schedule.to}}</div>
-          <ul>
-            <li ng-repeat="time in schedule.times">{{time | date:"HH:mm"}}</li>
-          </ul>
-      </div>
-    </div>
-    </body>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.10.3/angular-moment.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <style>
+  </style>
+</head>
+<body ng-app="myApp">
+<div ng-controller="MyCtrl as vm">
+  <div>
+    <select ng-model="vm.selectedSchedule"
+            ng-options="schedule as schedule.from.name + ' -> ' + schedule.to.name for schedule in vm.appDB.schedules"
+            ng-change="vm.refreshSchedule()">
+    </select>
+    <ul>
+      <li ng-repeat="time in vm.closestTimes">{{time | date:"HH:mm"}} (<span am-time-ago="time"></span>) </li>
+    </ul>
+  </div>
+</div>
+</body>
 </html>

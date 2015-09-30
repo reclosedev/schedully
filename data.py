@@ -48,7 +48,8 @@ dates = [datetime.datetime(2000, 1, 2 if x[0] == 0 else 1, hour=x[0], minute=x[1
 # for d1, d2 in zip(dates, dates[1:]):
 #     print d1, d2, (d2 - d1).total_seconds() / 60
 
-print """//data.js:
+print("""//data.js:
 
 window.APP_DB = {}
 """.format(json.dumps({"schedules": schedules, "locations": locations}))
+)
