@@ -29,8 +29,8 @@ app.controller("MyCtrl", function ($scope, $interval) {
         schedule.times[i] = d;
       }
     });
-    var intervalHourReport = $interval(refreshSchedule, 5 * 1000);
-    $scope.$on('$destroy', function () {$interval.cancel(intervalHourReport)});
+    var refreshInterval = $interval(refreshSchedule, 5 * 1000);
+    $scope.$on('$destroy', function () {$interval.cancel(refreshInterval)});
     refreshSchedule();
   }
 
