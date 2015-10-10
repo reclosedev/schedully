@@ -19,19 +19,28 @@
     <!-- endinject -->
     <!-- endbuild -->
   </head>
-  <body>
+  <body style="padding: 0 10px">
     <div ng-controller="MainController as main" layout="row" layout-align="center">
       <div layout="column" layout-align="center">
-        <md-select ng-model="main.selectedSchedule" ng-change="main.refreshSchedule()">
-          <md-option ng-value="schedule" ng-repeat="schedule in main.appDB.schedules">
-            {{schedule.from.name}}  -> {{schedule.to.name}}
-          </md-option>
-        </md-select>
-        <div flex align="center" layout-align="up">Counter</div>
-        <div layout="row">
-            <div flex="30">Time</div>
-            <div flex="30">Wait next</div>
-            <div >Time left</div>
+        <div>
+          <md-checkbox ng-model="main.selectNearest">
+            Ближайший пункт
+          </md-checkbox>
+          <md-select ng-model="main.selectedSchedule"
+                     ng-change="main.refreshSchedule()"
+                     ng-disabled="main.selectNearest">
+            <md-option ng-value="schedule" ng-repeat="schedule in main.appDB.schedules">
+              {{schedule.from.name}}  -> {{schedule.to.name}}
+            </md-option>
+          </md-select>
+          <div align="center" flex>
+            <div class="md-display-2">{{main.currentDelta | date:"mm:ss"}}</div>
+          </div>
+          <div layout="row">
+              <div flex="30">Время</div>
+              <div flex="30">Следующий через (минут)</div>
+              <div >Осталось</div>
+          </div>
         </div>
         <md-content layout-padding style="height: 400px;" flex>
           <div ng-repeat="time in main.closestTimes" layout="row">
