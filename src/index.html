@@ -1,0 +1,57 @@
+<!doctype html>
+<html ng-app="schedully">
+  <head>
+    <meta charset="utf-8">
+    <title>schedully</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- build:css({.tmp/serve,src}) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- run `gulp inject` to automatically populate bower styles dependencies -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css({.tmp/serve,src}) styles/app.css -->
+    <!-- inject:css -->
+    <!-- css files will be automatically insert here -->
+    <!-- endinject -->
+    <!-- endbuild -->
+  </head>
+  <body>
+    <div ng-controller="MainController as main" layout="row" layout-align="center">
+      <div layout="column" layout-align="center">
+        <md-select ng-model="main.selectedSchedule" ng-change="main.refreshSchedule()">
+          <md-option ng-value="schedule" ng-repeat="schedule in main.appDB.schedules">
+            {{schedule.from.name}}  -> {{schedule.to.name}}
+          </md-option>
+        </md-select>
+        <div align="center">Counter</div>
+        <md-content>
+          <div ng-repeat="time in main.closestTimes" layout="row">
+            <div flex="50">{{time | date:"HH:mm"}}</div>
+            <div am-time-ago="time"></div>
+          </div>
+        </md-content>
+      </div>
+    </div>
+
+    <!-- build:js(src) scripts/vendor.js -->
+    <!-- bower:js -->
+    <!-- run `gulp inject` to automatically populate bower script dependencies -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
+    <!-- inject:js -->
+    <!-- js files will be automatically insert here -->
+    <!-- endinject -->
+
+    <!-- inject:partials -->
+    <!-- angular templates will be automatically converted in js and inserted here -->
+    <!-- endinject -->
+    <!-- endbuild -->
+
+  </body>
+</html>
