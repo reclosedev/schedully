@@ -19,7 +19,7 @@
     <!-- endinject -->
     <!-- endbuild -->
   </head>
-  <body style="padding: 0 10px">
+  <body style="padding: 15px">
     <div ng-controller="MainController as main" layout="row" layout-align="center">
       <div layout="column" layout-align="center">
         <div>
@@ -54,15 +54,15 @@
             </div>
           </div>
           <div layout="row">
-              <div flex="30">Время</div>
+              <div flex="40">Время</div>
               <div flex="30">Следующий через (минут)</div>
               <div >Осталось</div>
           </div>
         </div>
         <md-content layout-padding style="height: 400px;" flex>
           <div ng-repeat="time in main.closestTimes" layout="row">
-            <div flex="30">{{time.at | date:"HH:mm"}}</div>
-            <div flex="30">{{time.nextAfterMinutes}}</div>
+            <div flex="33">{{time.at | date:"HH:mm"}}</div>
+            <div flex="33">{{time.nextAfterMinutes}}</div>
             <div am-time-ago="time.at"></div>
           </div>
         </md-content>
