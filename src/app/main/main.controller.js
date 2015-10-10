@@ -9,6 +9,8 @@
   function MainController($interval, $geolocation, $log) {
     var vm = this;
 
+    var _debug = true;
+
     vm.appDB = null;
     vm.timeWindowSeconds = 36 * 60 * 60; // two hours
     vm.selectedSchedule = null;
@@ -18,8 +20,11 @@
     vm.selectNearest = true;
     vm.distance = null;
     vm.approximateArivalTime = null;
+    vm.locationFrom = null;
+    vm.locationTo = null;
 
-    var _debug = false;
+    var locationsById = {};
+
 
     activate();
 
@@ -34,43 +39,31 @@
       $interval(updateTimeToNearest, 500);
     }
 
-    var _geoLocationActivated = false;
-    function setupGeoLocation() {
-      if (_geoLocationActivated){
-        return;
-      }
-      var geoOptions = {
-        timeout: 60000,
-        maximumAge: 1000,
-        enableHighAccuracy: true
-      };
-      $geolocation.getCurrentPosition(geoOptions).then(refreshSchedule);
-      $geolocation.watchPosition();
-      _geoLocationActivated = true;
-    }
+
 
     function prepareScheduleForDay() {
       $log.info("Prepare data for new day");
 
       vm.appDB = _.cloneDeep(window.APP_DB);
-      vm.selectedSchedule = vm.appDB.schedules[0];
+      vm.locationFrom = vm.appDB.locations[0];
+      vm.selectedSchedule = vm.locationFrom.schedules[0];
 
-      var locationsById = {};
+      locationsById = {};
       angular.forEach(vm.appDB.locations, function (location) {
         locationsById[location.id] = location;
       });
-
-      angular.forEach(vm.appDB.schedules, function (schedule) {
-        schedule.from = locationsById[schedule.from];
-        schedule.to = locationsById[schedule.to];
-        for (var i = 0; i < schedule.times.length; i++) {
-          var date = createDate();
-          date.setHours(schedule.times[i][0], schedule.times[i][1], 0, 0);
-          if (schedule.times[i][0] == 0) {
-            date.setDate(date.getDate() + 2);
+      angular.forEach(vm.appDB.locations, function (location) {
+        angular.forEach(location.schedules, function (schedule) {
+          //schedule.to = locationsById[schedule.to];
+          for (var i = 0; i < schedule.times.length; i++) {
+            var date = createDate();
+            date.setHours(schedule.times[i][0], schedule.times[i][1], 0, 0);
+            if (schedule.times[i][0] == 0) {
+              date.setDate(date.getDate() + 2);
+            }
+            schedule.times[i] = date;
           }
-          schedule.times[i] = date;
-        }
+        });
       });
     }
 
@@ -104,16 +97,16 @@
 
     function sortNearestAndSelect() {
       if (vm.currentPosition && vm.currentPosition.coords) {
-        vm.appDB.schedules = _.sortBy(vm.appDB.schedules, function (schedule) {
+        vm.appDB.locations = _.sortBy(vm.appDB.locations, function (location) {
 
-          schedule.from.places = _.sortBy(schedule.from.places, function (place) {
+          location.places = _.sortBy(location.places, function (place) {
             var dist = haversine(vm.currentPosition.coords, place.location);
             place.distance = dist;
             return dist
           });
-          return schedule.from.places[0].distance;
+          return location.places[0].distance;
         });
-        vm.selectedSchedule = vm.appDB.schedules[0];
+        vm.locationFrom = vm.appDB.locations[0];
       }
     }
 
@@ -133,7 +126,7 @@
       var virtualDate = createDate();
       virtualDate.setMinutes(0, delta, 0);
       vm.timeToClosest = virtualDate;
-      var distance = vm.selectedSchedule.from.places[0].distance;
+      var distance = vm.locationFrom.places[0].distance;
       if (typeof distance != "undefined"){
         vm.distance = (distance * 1000).toFixed(2);
       }
@@ -152,6 +145,21 @@
         return date;
       }
       return new Date();
+    }
+
+    var _geoLocationActivated = false;
+    function setupGeoLocation() {
+      if (_geoLocationActivated){
+        return;
+      }
+      var geoOptions = {
+        timeout: 60000,
+        maximumAge: 1000,
+        enableHighAccuracy: true
+      };
+      $geolocation.getCurrentPosition(geoOptions).then(refreshSchedule);
+      $geolocation.watchPosition();
+      _geoLocationActivated = true;
     }
   }
 })();

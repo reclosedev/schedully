@@ -26,11 +26,17 @@
           <md-checkbox ng-model="main.selectNearest" ng-change="main.refreshSchedule()">
             Ближайший пункт
           </md-checkbox>
-          <md-select ng-model="main.selectedSchedule"
+          <md-select ng-model="main.locationFrom"
                      ng-change="main.refreshSchedule()"
                      ng-disabled="main.selectNearest">
-            <md-option ng-value="schedule" ng-repeat="schedule in main.appDB.schedules">
-              {{schedule.from.name}}  -> {{schedule.to.name}}
+            <md-option ng-value="location" ng-repeat="location in main.appDB.locations">
+              {{location.name}}
+            </md-option>
+          </md-select>
+          <md-select ng-model="main.locationTo"
+                     ng-change="main.refreshSchedule()">
+            <md-option ng-value="schedule.to" ng-repeat="schedule in main.locationFrom.schedules">
+              {{schedule.to}}
             </md-option>
           </md-select>
           <div flex>
