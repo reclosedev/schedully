@@ -5,7 +5,7 @@
     .module('schedully')
     .controller('MainController', MainController);
 
-    /** @ngInject */
+  /** @ngInject */
   function MainController($interval, $geolocation, $log) {
     var vm = this;
 

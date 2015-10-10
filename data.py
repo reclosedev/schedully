@@ -56,9 +56,7 @@ def main():
         entry["times"] = times
 
 
-    data = "window.APP_DB = {}".format(
-        json.dumps({"schedules": schedules, "locations": locations})
-    )
+    data = "(function(){window.APP_DB = %s})();" % json.dumps({"schedules": schedules, "locations": locations})
     with open(TARGET, "w") as fp:
         fp.write(data)
 
