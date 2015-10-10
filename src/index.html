@@ -27,11 +27,17 @@
             {{schedule.from.name}}  -> {{schedule.to.name}}
           </md-option>
         </md-select>
-        <div align="center">Counter</div>
-        <md-content>
+        <div flex align="center" layout-align="up">Counter</div>
+        <div layout="row">
+            <div flex="30">Time</div>
+            <div flex="30">Wait next</div>
+            <div >Time left</div>
+        </div>
+        <md-content layout-padding style="height: 400px;" flex>
           <div ng-repeat="time in main.closestTimes" layout="row">
-            <div flex="50">{{time | date:"HH:mm"}}</div>
-            <div am-time-ago="time"></div>
+            <div flex="30">{{time.at | date:"HH:mm"}}</div>
+            <div flex="30">{{time.nextAfterMinutes}}</div>
+            <div am-time-ago="time.at"></div>
           </div>
         </md-content>
       </div>

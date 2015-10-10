@@ -10,7 +10,7 @@
     var vm = this;
 
     vm.appDB = null;
-    vm.timeWindowMinutes = 2 * 60; // two hours
+    vm.timeWindowMinutes = 36 * 60; // two hours
     vm.selectedSchedule = null;
     vm.closestTimes = [];
     vm.refreshSchedule = refreshSchedule;
@@ -81,12 +81,14 @@
 
       sortNearestAndSelect();
 
-      angular.forEach(vm.selectedSchedule.times, function (time) {
-        var delta = moment(time).diff(timeNow, 'minutes');
-        if (delta >= 0 && delta < vm.timeWindowMinutes) {
-          vm.closestTimes.push(time);
+      for (var i = 0; i < vm.selectedSchedule.times.length; i++){
+        var time = vm.selectedSchedule.times[i];
+        var deltaNow = moment(time).diff(timeNow, 'minutes');
+        if (deltaNow >= 0 && deltaNow < vm.timeWindowMinutes) {
+          var deltaNext = moment(vm.selectedSchedule.times[i + 1]).diff(time, 'minutes');
+          vm.closestTimes.push({at: time, nextAfterMinutes: deltaNext});
         }
-      });
+      }
     }
 
     function sortNearestAndSelect() {
