@@ -23,7 +23,7 @@
     <div ng-controller="MainController as main" layout="row" layout-align="center">
       <div layout="column" layout-align="center">
         <div>
-          <md-checkbox ng-model="main.selectNearest">
+          <md-checkbox ng-model="main.selectNearest" ng-change="main.refreshSchedule()">
             Ближайший пункт
           </md-checkbox>
           <md-select ng-model="main.selectedSchedule"
@@ -33,8 +33,25 @@
               {{schedule.from.name}}  -> {{schedule.to.name}}
             </md-option>
           </md-select>
-          <div align="center" flex>
-            <div class="md-display-2">{{main.currentDelta | date:"mm:ss"}}</div>
+          <div flex>
+            <div layout="row">
+              <div class="md-display-2" flex="20">
+                {{main.timeToClosest | date:"mm:ss"}}
+              </div>
+              <div align="right" flex layout="column">
+                <table>
+                  <tr>
+                    <td>Дистанция:</td><td>{{main.distance || "n/a"}} м</td>
+                  </tr>
+                  <tr>
+                    <td>ETA:</td><td>{{(main.approximateArivalTime  | date:"mm:ss") || "n/a"}}</td>
+                  </tr>
+                  <tr>
+                    <td>Скорость:</td><td>{{main.currentPosition.coords.speed || "n/a"}} м/с</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
           </div>
           <div layout="row">
               <div flex="30">Время</div>

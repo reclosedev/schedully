@@ -16,6 +16,10 @@
     vm.refreshSchedule = refreshSchedule;
     vm.currentPosition = $geolocation.position;
     vm.selectNearest = true;
+    vm.distance = null;
+    vm.approximateArivalTime = null;
+
+    var _debug = false;
 
     activate();
 
@@ -60,7 +64,7 @@
         schedule.from = locationsById[schedule.from];
         schedule.to = locationsById[schedule.to];
         for (var i = 0; i < schedule.times.length; i++) {
-          var date = new Date();
+          var date = createDate();
           date.setHours(schedule.times[i][0], schedule.times[i][1], 0, 0);
           if (schedule.times[i][0] == 0) {
             date.setDate(date.getDate() + 2);
@@ -72,17 +76,15 @@
 
     function refreshSchedule() {
       vm.closestTimes = [];
-      var timeNow = new Date();
+      var timeNow = createDate();
 
-      // DEBUG
-      if (0){
-        timeNow.setHours(9, 30);
+      if (_debug){
         vm.currentPosition = {
-          coords: {latitude: 10, longitude: 10}
+          coords: {latitude: 56.321376, longitude: 43.955503, speed: 2}
         }
       }
 
-      $log.debug("Refresh " + timeNow);
+      $log.debug("Refresh " + timeNow  + " nearest? " + vm.selectNearest);
 
       if(vm.selectNearest){
         setupGeoLocation();
@@ -116,20 +118,40 @@
     }
 
     function updateTimeToNearest(){
-      if(vm.closestTimes.length) {
-        var now = new Date();
-        var delta = 0;
-        for (var i = 0; i < vm.closestTimes.length; i++) {
-          delta = moment(vm.closestTimes[i].at).diff(now, 'seconds');
-          if (delta > 0){
-            break;
-          }
-        }
-
-        var virtualDate = new Date();
-        virtualDate.setMinutes(0, delta, 0);
-        vm.currentDelta = virtualDate;
+      if(!vm.closestTimes.length) {
+        return
       }
+      var now = createDate();
+      var delta = 0;
+      for (var i = 0; i < vm.closestTimes.length; i++) {
+        delta = moment(vm.closestTimes[i].at).diff(now, 'seconds');
+        if (delta > 0){
+          break;
+        }
+      }
+
+      var virtualDate = createDate();
+      virtualDate.setMinutes(0, delta, 0);
+      vm.timeToClosest = virtualDate;
+      var distance = vm.selectedSchedule.from.places[0].distance;
+      if (typeof distance != "undefined"){
+        vm.distance = (distance * 1000).toFixed(2);
+      }
+      if (vm.distance && delta &&
+          vm.currentPosition &&
+          vm.currentPosition.coords && vm.currentPosition.coords.speed) {
+        var approximateArrivalSeconds = vm.distance / vm.currentPosition.coords.speed;
+        vm.approximateArivalTime = createDate().setMinutes(0, approximateArrivalSeconds, 0);
+      }
+    }
+
+    function createDate(){
+      if (_debug){
+        var date = new Date();
+        date.setHours(9, 30);
+        return date;
+      }
+      return new Date();
     }
   }
 })();
