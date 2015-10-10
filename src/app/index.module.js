@@ -2,6 +2,6 @@
   'use strict';
 
   angular
-    .module('schedully', ['ngTouch', 'ngMaterial', 'angularMoment']);
+    .module('schedully', ['ngTouch', 'ngMaterial', 'angularMoment', 'ngGeolocation']);
 
 })();

@@ -10,7 +10,9 @@
     "animate.css": "~3.3.0",
     "angular": "~1.4.0",
     "angular-moment": "~0.10.3",
-    "lodash": "~3.10.1"
+    "lodash": "~3.10.1",
+    "ngGeolocation": "~0.0.8",
+    "haversine": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"

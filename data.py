@@ -29,7 +29,7 @@ locations = [
         "places": [
             {
                 "name": "Вход с ул. Горького",
-                "location": {"lat": 56.314362, "lon": 43.994766},
+                "location": {"latitude": 56.314362, "longitude": 43.994766},
             }
         ],
         "name": 'Метро "Горьковская"',
@@ -40,7 +40,7 @@ locations = [
         "places": [
             {
                 "name": "Вход с Вокзала",
-                "location": {"lat": 56.321376, "lon": 43.945503},
+                "location": {"latitude": 56.321376, "longitude": 43.945503},
             }
         ],
         "name": 'Метро "Московская"',
