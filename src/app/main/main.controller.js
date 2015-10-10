@@ -31,7 +31,7 @@
       // TODO: destroy?
       $interval(prepareScheduleForDay, 60 * 60 * 1000);
       $interval(refreshSchedule, 5 * 1000);
-      $interval(updateTimeToNearest, 1000);
+      $interval(updateTimeToNearest, 500);
     }
 
     var _geoLocationActivated = false;
