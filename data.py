@@ -1,6 +1,9 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 import json
 
+TARGET = "src/app/components/schedulesData/data.js"
 
 schedules = [
     {
@@ -23,33 +26,41 @@ locations = [
     {
         "id": "m-gork",
         "type": "metro",
-        "coordinates": [10, 10],
-        "name": "Metro Gorky",
+        "places": [
+            {
+                "name": "Вход с ул. Горького",
+                "location": {"lat": 56.314362, "lon": 43.994766},
+            }
+        ],
+        "name": 'Метро "Горьковская"',
     },
     {
         "id": "m-mosk",
         "type": "metro",
-        "coordinates": [20, 20],
-        "name": "Metro Moscowsky",
+        "places": [
+            {
+                "name": "Вход с Вокзала",
+                "location": {"lat": 56.321376, "lon": 43.945503},
+            }
+        ],
+        "name": 'Метро "Московская"',
     }
 ]
 
-for entry in schedules:
-    times = entry["times"].replace("\n", " ").replace(": ", ":")
-    times = [x.strip() for x in times.split(",")]
-    times = [map(int, x.split(":")) for x in times]
-    entry["times"] = times
 
-import datetime
+def main():
+    for entry in schedules:
+        times = entry["times"].replace("\n", " ").replace(": ", ":")
+        times = [x.strip() for x in times.split(",")]
+        times = [list(map(int, x.split(":"))) for x in times]
+        entry["times"] = times
 
-dates = schedules[0]["times"][:]
-dates = [datetime.datetime(2000, 1, 2 if x[0] == 0 else 1, hour=x[0], minute=x[1]) for x in dates]
 
-# for d1, d2 in zip(dates, dates[1:]):
-#     print d1, d2, (d2 - d1).total_seconds() / 60
+    data = "window.APP_DB = {}".format(
+        json.dumps({"schedules": schedules, "locations": locations})
+    )
+    with open(TARGET, "w") as fp:
+        fp.write(data)
 
-print("""//data.js:
-
-window.APP_DB = {}
-""".format(json.dumps({"schedules": schedules, "locations": locations}))
-)
+if __name__ == "__main__":
+    main()
