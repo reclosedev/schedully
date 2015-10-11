@@ -23,7 +23,8 @@
     vm.approximateETA = null;
 
     vm.$storage = $localStorage.$default({
-      useGeoLocation: true,
+      useGeoLocation: false,
+      showAllSchedules: false,
       locationIdTo: null,
       locationIdFrom: null
     });
@@ -104,7 +105,7 @@
         var time = schedule.times[i];
         var deltaNow = moment(time).diff(timeNow, 'seconds') + timeOffset;
 
-        if (deltaNow >= 0) {
+        if (vm.$storage.showAllSchedules || deltaNow >= 0) {
           var deltaNext = moment(schedule.times[i + 1]).diff(time, 'minutes');
           if (deltaNext < 0) {
             deltaNext = "n/a";
@@ -139,6 +140,7 @@
       for (var i = 0; i < vm.closestTimes.length; i++) {
         delta = moment(vm.closestTimes[i].at).diff(now, 'seconds');
         if (delta > 0){
+          vm.closestTimes[i].isTracked = true;
           break;
         }
       }

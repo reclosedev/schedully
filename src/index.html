@@ -23,9 +23,14 @@
     <div ng-controller="MainController as main" style="max-width: 600px;">
       <div layout="column" layout-align="center">
         <div id="options">
-          <md-checkbox ng-model="main.$storage.useGeoLocation" ng-change="main.refreshSchedule()">
-            Рядом со мной (геолокация)
-          </md-checkbox>
+          <div layout="row">
+            <md-checkbox ng-model="main.$storage.useGeoLocation" ng-change="main.refreshSchedule()" flex="50">
+              Рядом со мной (геолокация)
+            </md-checkbox>
+            <md-checkbox ng-model="main.$storage.showAllSchedules" ng-change="main.refreshSchedule()" flex>
+              Не скрывать старые
+            </md-checkbox>
+          </div>
           <div id="selects">
             <md-select ng-model="main.$storage.locationIdFrom"
                        ng-change="main.refreshSchedule()"
@@ -42,37 +47,39 @@
               </md-option>
             </md-select>
           </div>
+        </div>
+        <div flex id="geo-info">
+          <div layout="row">
+            <div flex>
+              <small flex class="md-caption gray">{{main.locationsById[main.$storage.locationIdFrom].places[0].name}}</small>
+              <div class="md-display-2" >{{main.timeToClosest | date:"mm:ss"}}</div>
+            </div>
 
-          <div flex>
-            <div layout="row">
-              <div flex>
-                <small flex class="md-caption gray">{{main.locationsById[main.$storage.locationIdFrom].places[0].name}}</small>
-                <div class="md-display-2" >{{main.timeToClosest | date:"mm:ss"}}</div>
-              </div>
-
-              <div align="right" flex layout="column">
-                <table ng-class="{'gray': !main.$storage.useGeoLocation}" class="md-caption">
-                  <tr>
-                    <td>Дистанция:</td><td>{{main.distance || "n/a"}} м</td>
-                  </tr>
-                  <tr>
-                    <td>ETA<span ng-if="!main.currentPosition.coords.speed"> (5 км/ч)</span>:</td><td>{{(main.approximateETA  | date:"hh:mm:ss") || "n/a"}}</td>
-                  </tr>
-                  <tr>
-                    <td>Скорость:</td><td>{{main.currentPosition.coords.speed || "n/a"}} м/с</td>
-                  </tr>
-                </table>
-              </div>
+            <div align="right" flex layout="column">
+              <table ng-class="{'gray': !main.$storage.useGeoLocation}" class="md-caption">
+                <tr>
+                  <td>Дистанция:</td><td>{{main.distance || "n/a"}} м</td>
+                </tr>
+                <tr>
+                  <td>ETA<span ng-if="!main.currentPosition.coords.speed"> (5 км/ч)</span>:</td><td>{{(main.approximateETA  | date:"hh:mm:ss") || "n/a"}}</td>
+                </tr>
+                <tr>
+                  <td>Скорость:</td><td>{{main.currentPosition.coords.speed || "n/a"}} м/с</td>
+                </tr>
+              </table>
             </div>
           </div>
-          <div layout="row">
-              <div flex="33">Время</div>
-              <div flex="33">Следующий</div>
-              <div >Осталось</div>
-          </div>
         </div>
+
+        <div layout="row">
+            <div flex="33">Время</div>
+            <div flex="33">Следующий</div>
+            <div >Осталось</div>
+        </div>
+
         <md-content layout-padding md-scroll-y flex>
-          <div ng-repeat="time in main.closestTimes" layout="row">
+          <div ng-repeat="time in main.closestTimes" layout="row"
+               ng-class="{'highlight': time.isTracked}">
             <div flex="33">{{time.at | date:"HH:mm"}}</div>
             <div flex="33">{{time.nextAfterMinutes}}</div>
             <div am-time-ago="time.at"></div>
