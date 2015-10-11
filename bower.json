@@ -12,7 +12,8 @@
     "angular-moment": "~0.10.3",
     "lodash": "~3.10.1",
     "ngGeolocation": "~0.0.8",
-    "haversine": "*"
+    "haversine": "*",
+    "ngstorage": "~0.3.9"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"

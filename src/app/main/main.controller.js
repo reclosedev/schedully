@@ -6,7 +6,7 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($interval, $geolocation, $log) {
+  function MainController($interval, $geolocation, $log, $localStorage) {
     var vm = this;
 
     var _debug = true;
@@ -17,11 +17,13 @@
     vm.closestTimes = [];
     vm.refreshSchedule = refreshSchedule;
     vm.currentPosition = $geolocation.position;
-    vm.useGeoLocation = true;
     vm.distance = null;
     vm.approximateArivalTime = null;
     vm.locationFrom = null;
     vm.locationTo = null;
+    vm.$storage = $localStorage.$default({
+      useGeoLocation: true
+    });
 
     var locationsById = {};
 
@@ -77,10 +79,10 @@
         }
       }
 
-      $log.debug("Refresh " + timeNow  + " nearest? " + vm.useGeoLocation);
+      $log.debug("Refresh " + timeNow  + " nearest? " + vm.$storage.useGeoLocation);
 
       ensureGeoLocationState();
-      if(vm.useGeoLocation){
+      if(vm.$storage.useGeoLocation){
         sortNearestAndSelect();
       }
 
@@ -150,11 +152,11 @@
     var _geoLocationActivated = false;
     function ensureGeoLocationState() {
       if (_geoLocationActivated){
-        if (!vm.useGeoLocation){
+        if (!vm.$storage.useGeoLocation){
           _geoLocationActivated = false;
           $geolocation.clearWatch();
         }
-      } else if (vm.useGeoLocation) {
+      } else if (vm.$storage.useGeoLocation) {
         var geoOptions = {
           timeout: 60000,
           maximumAge: 1000,
