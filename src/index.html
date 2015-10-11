@@ -60,7 +60,7 @@
           <div layout="row">
             <div flex>
               <small flex class="md-caption gray">{{main.locationsById[main.$storage.locationIdFrom].places[0].name}}</small>
-              <div class="md-display-2" >{{main.timeToClosest | date:"mm:ss"}}</div>
+              <div class="md-display-2" >{{(main.timeToClosest | date:"mm:ss") || "Пусто"}}</div>
             </div>
 
             <div align="right" flex layout="column">
@@ -80,7 +80,7 @@
         </div>
 
         <div layout="row">
-            <div flex="33">Время</div>
+            <div flex="20">Время</div>
             <div flex="33">Следующий</div>
             <div>Когда</div>
         </div>
@@ -88,7 +88,7 @@
         <md-content layout-padding md-scroll-y flex>
           <div ng-repeat="time in main.closestTimes" layout="row"
                ng-class="{'highlight': time.isTracked}">
-            <div flex="33">{{time.at | date:"HH:mm"}}</div>
+            <div flex="20">{{time.at | date:"HH:mm"}}</div>
             <div flex="33">{{time.nextAfterMinutes}}</div>
             <div am-time-ago="time.at"></div>
           </div>

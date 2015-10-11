@@ -159,6 +159,7 @@
 
     function updateTimeAndDistanceToNearest(){
       if(!vm.closestTimes.length) {
+        vm.timeToClosest = null;
         return
       }
       var now = createDate();
@@ -170,9 +171,13 @@
           break;
         }
       }
-      var virtualDate = createDate();
-      virtualDate.setHours(0, 0, delta, 0);
-      vm.timeToClosest = virtualDate;
+      if (delta === 0) {
+        vm.timeToClosest = null;
+      } else {
+        var virtualDate = createDate();
+        virtualDate.setHours(0, 0, delta, 0);
+        vm.timeToClosest = virtualDate;
+      }
 
       var distance = vm.locationsById[vm.$storage.locationIdFrom].places[0].distance;
       if (typeof distance != "undefined"){
