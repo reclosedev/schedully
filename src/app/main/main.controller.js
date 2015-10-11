@@ -18,13 +18,13 @@
     vm.currentPosition = $geolocation.position;
     vm.distance = null;
     vm.approximateArivalTime = null;
-    vm.locationIdFrom = null;
-    vm.locationIdTo = null;
     vm.availableSchedules = [];
     vm.locationsById = {};
     
     vm.$storage = $localStorage.$default({
-      useGeoLocation: true
+      useGeoLocation: true,
+      locationIdTo: null,
+      locationIdFrom: null
     });
     
     var schedulesByLocations = {};
@@ -49,7 +49,6 @@
       $log.info("Prepare data for new day");
 
       vm.appDB = _.cloneDeep(window.APP_DB);
-      vm.locationIdFrom = vm.appDB.locations[0].id;
 
       vm.locationsById = {};
       schedulesByLocations = {};
@@ -75,7 +74,10 @@
           }
         });
       });
-      vm.availableSchedules = vm.locationsById[vm.locationIdFrom].schedules;
+      if (!vm.$storage.locationIdFrom || !(vm.$storage.locationIdFrom in vm.locationsById)){
+        vm.$storage.locationIdFrom = vm.appDB.locations[0].id;
+      }
+      vm.availableSchedules = vm.locationsById[vm.$storage.locationIdFrom].schedules;
     }
 
     function refreshSchedule() {
@@ -95,9 +97,9 @@
         sortNearestAndSelect();
       }
 
-      vm.availableSchedules = vm.locationsById[vm.locationIdFrom].schedules;
-      if (_.findIndex(vm.availableSchedules, 'to', vm.locationIdTo) === -1) {
-        vm.locationIdTo = vm.availableSchedules[0].to;
+      vm.availableSchedules = vm.locationsById[vm.$storage.locationIdFrom].schedules;
+      if (_.findIndex(vm.availableSchedules, 'to', vm.$storage.locationIdTo) === -1) {
+        vm.$storage.locationIdTo = vm.availableSchedules[0].to;
       }
 
       var schedule = selectedSchedule();
@@ -123,7 +125,7 @@
           });
           return location.places[0].distance;
         });
-        vm.locationIdFrom = vm.appDB.locations[0].id;
+        vm.$storage.locationIdFrom = vm.appDB.locations[0].id;
       }
     }
 
@@ -143,7 +145,7 @@
       var virtualDate = createDate();
       virtualDate.setMinutes(0, delta, 0);
       vm.timeToClosest = virtualDate;
-      var distance = vm.locationsById[vm.locationIdFrom].places[0].distance;
+      var distance = vm.locationsById[vm.$storage.locationIdFrom].places[0].distance;
       if (typeof distance != "undefined"){
         vm.distance = (distance * 1000).toFixed(2);
       }
@@ -156,7 +158,7 @@
     }
 
     function selectedSchedule(){
-      return schedulesByLocations[vm.locationIdFrom][vm.locationIdTo];
+      return schedulesByLocations[vm.$storage.locationIdFrom][vm.$storage.locationIdTo];
     }
 
     function createDate(){

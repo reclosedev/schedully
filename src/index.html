@@ -27,14 +27,14 @@
             Геолокация
           </md-checkbox>
           <div id="selects">
-            <md-select ng-model="main.locationIdFrom"
+            <md-select ng-model="main.$storage.locationIdFrom"
                        ng-change="main.refreshSchedule()"
                        ng-disabled="main.$storage.useGeoLocation">
               <md-option ng-value="location.id" ng-repeat="location in main.appDB.locations">
                 {{location.name}}
               </md-option>
             </md-select>
-            <md-select ng-model="main.locationIdTo"
+            <md-select ng-model="main.$storage.locationIdTo"
                        ng-change="main.refreshSchedule()"
                        ng-disabled="main.availableSchedules.length <= 1">
               <md-option ng-value="schedule.to" ng-repeat="schedule in main.availableSchedules">
@@ -46,7 +46,7 @@
           <div flex>
             <div layout="row">
               <div flex>
-                <small flex class="md-caption gray">{{main.locationsById[main.locationIdFrom].places[0].name}}</small>
+                <small flex class="md-caption gray">{{main.locationsById[main.$storage.locationIdFrom].places[0].name}}</small>
                 <div class="md-display-2" >{{main.timeToClosest | date:"mm:ss"}}</div>
               </div>
 
