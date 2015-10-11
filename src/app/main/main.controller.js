@@ -20,7 +20,7 @@
 
     vm.currentPosition = $geolocation.position;
     vm.distance = null;
-    vm.approximateArivalTime = null;
+    vm.approximateETA = null;
 
     vm.$storage = $localStorage.$default({
       useGeoLocation: true,
@@ -149,11 +149,14 @@
       if (typeof distance != "undefined"){
         vm.distance = (distance * 1000).toFixed(2);
       }
-      if (vm.distance && delta &&
-          vm.currentPosition &&
-          vm.currentPosition.coords && vm.currentPosition.coords.speed) {
-        var approximateArrivalSeconds = vm.distance / vm.currentPosition.coords.speed;
-        vm.approximateArivalTime = createDate().setMinutes(0, approximateArrivalSeconds, 0);
+
+      if (vm.distance && delta && vm.currentPosition) {
+        var speed = 1.38889; // 5 km/h in m/s
+        if (vm.currentPosition.coords && vm.currentPosition.coords.speed){
+          speed = vm.currentPosition.coords.speed;
+        }
+        var approximateArrivalSeconds = vm.distance / speed;
+        vm.approximateETA = createDate().setMinutes(0, approximateArrivalSeconds, 0);
       }
     }
 

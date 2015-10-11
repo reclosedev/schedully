@@ -24,7 +24,7 @@
       <div layout="column" layout-align="center">
         <div id="options">
           <md-checkbox ng-model="main.$storage.useGeoLocation" ng-change="main.refreshSchedule()">
-            Геолокация
+            Рядом со мной (геолокация)
           </md-checkbox>
           <div id="selects">
             <md-select ng-model="main.$storage.locationIdFrom"
@@ -56,7 +56,7 @@
                     <td>Дистанция:</td><td>{{main.distance || "n/a"}} м</td>
                   </tr>
                   <tr>
-                    <td>ETA:</td><td>{{(main.approximateArivalTime  | date:"mm:ss") || "n/a"}}</td>
+                    <td>ETA<span ng-if="!main.currentPosition.coords.speed"> (5 км/ч)</span>:</td><td>{{(main.approximateETA  | date:"hh:mm:ss") || "n/a"}}</td>
                   </tr>
                   <tr>
                     <td>Скорость:</td><td>{{main.currentPosition.coords.speed || "n/a"}} м/с</td>
