@@ -23,12 +23,12 @@
     <div ng-controller="MainController as main" layout="row" layout-align="center">
       <div layout="column" layout-align="center">
         <div>
-          <md-checkbox ng-model="main.selectNearest" ng-change="main.refreshSchedule()">
-            Ближайший пункт
+          <md-checkbox ng-model="main.useGeoLocation" ng-change="main.refreshSchedule()">
+            Геолокация
           </md-checkbox>
           <md-select ng-model="main.locationFrom"
                      ng-change="main.refreshSchedule()"
-                     ng-disabled="main.selectNearest">
+                     ng-disabled="main.useGeoLocation">
             <md-option ng-value="location" ng-repeat="location in main.appDB.locations">
               {{location.name}}
             </md-option>
@@ -45,7 +45,7 @@
                 {{main.timeToClosest | date:"mm:ss"}}
               </div>
               <div align="right" flex layout="column">
-                <table>
+                <table ng-class="{'disabled-element': !main.useGeoLocation}">
                   <tr>
                     <td>Дистанция:</td><td>{{main.distance || "n/a"}} м</td>
                   </tr>

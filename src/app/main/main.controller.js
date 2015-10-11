@@ -17,7 +17,7 @@
     vm.closestTimes = [];
     vm.refreshSchedule = refreshSchedule;
     vm.currentPosition = $geolocation.position;
-    vm.selectNearest = true;
+    vm.useGeoLocation = true;
     vm.distance = null;
     vm.approximateArivalTime = null;
     vm.locationFrom = null;
@@ -77,10 +77,10 @@
         }
       }
 
-      $log.debug("Refresh " + timeNow  + " nearest? " + vm.selectNearest);
+      $log.debug("Refresh " + timeNow  + " nearest? " + vm.useGeoLocation);
 
-      if(vm.selectNearest){
-        setupGeoLocation();
+      ensureGeoLocationState();
+      if(vm.useGeoLocation){
         sortNearestAndSelect();
       }
 
@@ -148,18 +148,23 @@
     }
 
     var _geoLocationActivated = false;
-    function setupGeoLocation() {
+    function ensureGeoLocationState() {
       if (_geoLocationActivated){
-        return;
+        if (!vm.useGeoLocation){
+          _geoLocationActivated = false;
+          $geolocation.clearWatch();
+        }
+      } else if (vm.useGeoLocation) {
+        var geoOptions = {
+          timeout: 60000,
+          maximumAge: 1000,
+          enableHighAccuracy: true
+        };
+        $geolocation.getCurrentPosition(geoOptions).then(refreshSchedule);
+        $geolocation.watchPosition();
+        _geoLocationActivated = true;
       }
-      var geoOptions = {
-        timeout: 60000,
-        maximumAge: 1000,
-        enableHighAccuracy: true
-      };
-      $geolocation.getCurrentPosition(geoOptions).then(refreshSchedule);
-      $geolocation.watchPosition();
-      _geoLocationActivated = true;
+
     }
   }
 })();
