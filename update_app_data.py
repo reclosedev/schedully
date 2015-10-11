@@ -105,6 +105,50 @@ locations = [
             },
         ],
     },
+    {
+        "id": "v-nn-moskovsky",
+        "type": "railway",
+        "name": 'Вокзал "Московски" (НН)',
+        "places": [
+            {
+                "name": "Вход",
+                "location": {"latitude": 56.3217146, "longitude": 43.9460467},
+            }
+        ],
+
+        "schedules": [
+            # https://rasp.yandex.ru/search/suburban/?fromName=%D0%9D%D0%B8%D0%B6%D0%BD%D0%B8%D0%B9+%D0%9D%D0%BE%D0%B2%D0%B3%D0%BE%D1%80%D0%BE%D0%B4+%28%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9+%D0%B2%D0%BE%D0%BA%D0%B7%D0%B0%D0%BB%29&fromId=&toName=%D0%94%D0%B7%D0%B5%D1%80%D0%B6%D0%B8%D0%BD%D1%81%D0%BA&toId=c972&when=%D0%BD%D0%B0+%D0%B2%D1%81%D0%B5+%D0%B4%D0%BD%D0%B8
+            # $(".b-timetable__cell_type_departure>span").map(function(i, x){return $(x).text()}).toArray().join(", ")
+            {
+                "to": "v-dzerzhinsk",
+                "times": """
+05:00, 05:50, 06:28, 07:20, 08:30, 10:05, 12:53, 14:18, 15:20,
+16:00, 16:20, 16:30, 17:19, 17:27, 18:25, 19:30, 20:30, 21:50
+                """
+            },
+        ],
+    },
+    {
+        "id": "v-dzerzhinsk",
+        "type": "railway",
+        "name": 'Вокзал Дзержинск',
+        "places": [
+            {
+                "name": "Вход",
+                "location": {"latitude": 56.228459, "longitude": 43.454128},
+            }
+        ],
+
+        "schedules": [
+            {
+                "to": "v-nn-moskovsky",
+                "times": """
+05:15, 05:55, 06:25, 06:35, 07:02, 07:33, 07:44, 08:32, 09:08,
+09:18, 10:28, 14:30, 15:05, 16:22, 17:30, 17:58, 19:11, 19:59, 20:53
+                """
+            },
+        ],
+    },
 ]
 
 

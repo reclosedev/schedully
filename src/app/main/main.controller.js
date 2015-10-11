@@ -33,19 +33,17 @@
 
     activate();
 
-
     function activate() {
-      prepareScheduleForDay();
+      initializeLocationsAndSchedules();
       refreshSchedule();
 
       // TODO: destroy?
-      $interval(prepareScheduleForDay, 60 * 60 * 1000);
+      $interval(initializeLocationsAndSchedules, 60 * 60 * 1000);
       $interval(refreshSchedule, 5 * 1000);
       $interval(updateTimeAndDistanceToNearest, 500);
     }
 
-
-    function prepareScheduleForDay() {
+    function initializeLocationsAndSchedules() {
       $log.info("Prepare data for new day");
 
       vm.appDB = _.cloneDeep(window.APP_DB);
@@ -142,7 +140,7 @@
         }
       }
       var virtualDate = createDate();
-      virtualDate.setMinutes(0, delta, 0);
+      virtualDate.setHours(0, 0, delta, 0);
       vm.timeToClosest = virtualDate;
 
       var distance = vm.locationsById[vm.$storage.locationIdFrom].places[0].distance;
@@ -156,7 +154,7 @@
           speed = vm.currentPosition.coords.speed;
         }
         var approximateArrivalSeconds = vm.distance / speed;
-        vm.approximateETA = createDate().setMinutes(0, approximateArrivalSeconds, 0);
+        vm.approximateETA = createDate().setHours(0, 0, approximateArrivalSeconds, 0);
       }
     }
 
@@ -174,6 +172,7 @@
     }
 
     var _geoLocationActivated = false;
+
     function ensureGeoLocationState() {
       if (_geoLocationActivated){
         if (!vm.$storage.useGeoLocation){
