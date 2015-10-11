@@ -6,8 +6,9 @@
     .run(runBlock);
 
   /** @ngInject */
-  function runBlock($log) {
+  function runBlock($log, amMoment) {
 
+    amMoment.changeLocale("ru");
     $log.debug('runBlock end');
   }
 
