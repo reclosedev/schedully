@@ -189,7 +189,7 @@ locations = [
         "places": [
             {
                 "name": "На стоянке",
-                "location": {"latitude": 56.244057, "longitude": 43.463199},
+                "location": {"latitude": 56.322472, "longitude": 43.948036},
             }
         ],
         "schedules": [
@@ -206,7 +206,6 @@ locations = [
             },
         ],
     },
-
 ]
 
 

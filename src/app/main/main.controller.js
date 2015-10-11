@@ -158,35 +158,42 @@
     }
 
     function updateTimeAndDistanceToNearest(){
-      if(!vm.closestTimes.length) {
+      updateTimeToNearest();
+      updateDistanceToNearest();
+    }
+
+    function updateTimeToNearest() {
+      if (!vm.closestTimes.length) {
         vm.timeToClosest = null;
-        return
+        return;
       }
       var now = createDate();
       var delta = 0;
       for (var i = 0; i < vm.closestTimes.length; i++) {
         delta = moment(vm.closestTimes[i].at).diff(now, 'seconds');
-        if (delta > 0){
+        if (delta > 0) {
           vm.closestTimes[i].isTracked = true;
           break;
         }
       }
-      if (delta === 0) {
+      if (delta <= 0) {
         vm.timeToClosest = null;
       } else {
         var virtualDate = createDate();
         virtualDate.setHours(0, 0, delta, 0);
         vm.timeToClosest = virtualDate;
       }
+    }
 
+    function updateDistanceToNearest() {
       var distance = vm.locationsById[vm.$storage.locationIdFrom].places[0].distance;
-      if (typeof distance != "undefined"){
+      if (typeof distance != "undefined") {
         vm.distance = (distance * 1000).toFixed(2);
       }
 
-      if (vm.distance && delta && vm.currentPosition) {
+      if (vm.distance && vm.currentPosition) {
         var speed = 1.38889; // 5 km/h in m/s
-        if (vm.currentPosition.coords && vm.currentPosition.coords.speed){
+        if (vm.currentPosition.coords && vm.currentPosition.coords.speed) {
           speed = vm.currentPosition.coords.speed;
         }
         var approximateArrivalSeconds = vm.distance / speed;
