@@ -6,12 +6,13 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($interval, $geolocation, $log, $localStorage) {
+  function MainController($interval, $geolocation, $log, $localStorage, $mdDialog) {
     var vm = this;
 
     var _debug = false;
 
     vm.refreshSchedule = refreshSchedule;
+    vm.selectNearestLocation = selectNearestLocation;
 
     vm.appDB = null;
     vm.closestTimes = [];
@@ -119,7 +120,6 @@
     function sortLocationsByDistanceAndSelectNearest() {
       if (vm.currentPosition && vm.currentPosition.coords) {
         vm.appDB.locations = _.sortBy(vm.appDB.locations, function (location) {
-
           location.places = _.sortBy(location.places, function (place) {
             var dist = haversine(vm.currentPosition.coords, place.location);
             place.distance = dist;
@@ -127,7 +127,33 @@
           });
           return location.places[0].distance;
         });
+        return true;
+      }
+      return false;
+    }
+
+    function selectNearestLocation(){
+      if(sortLocationsByDistanceAndSelectNearest()) {
         vm.$storage.locationIdFrom = vm.appDB.locations[0].id;
+        refreshSchedule();
+      } else {
+        if (vm.$storage.useGeoLocation) {
+          $mdDialog.alert()
+            .clickOutsideToClose(true)
+            .title('Ошибка получения геолокации')
+            .content('Нет данных о положении. Ближайшее место не выбрано')
+            .ok('ОК')
+        } else {
+          var confirm = $mdDialog.confirm()
+            .title('Выбор ближайшего места')
+            .content('Для выбора ближайшего места необходимо включить геолокацию. <b>Включить?</b>')
+            .ok('Да')
+            .cancel('Нет');
+          $mdDialog.show(confirm).then(function() {
+            vm.$storage.useGeoLocation = true;
+            refreshSchedule();
+          });
+        }
       }
     }
 

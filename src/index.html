@@ -19,22 +19,30 @@
     <!-- endinject -->
     <!-- endbuild -->
   </head>
-  <body style="padding: 15px">
+  <body style="padding: 10px">
     <div ng-controller="MainController as main" style="max-width: 600px;">
-      <div layout="column" layout-align="center">
+      <div layout="column">
         <div id="options">
           <div layout="row">
-            <md-checkbox ng-model="main.$storage.useGeoLocation" ng-change="main.refreshSchedule()" flex="50">
-              Рядом со мной (геолокация)
-            </md-checkbox>
-            <md-checkbox ng-model="main.$storage.showAllSchedules" ng-change="main.refreshSchedule()" flex>
-              Не скрывать старые
-            </md-checkbox>
+            <div layout="column" flex>
+              <md-checkbox ng-model="main.$storage.useGeoLocation" ng-change="main.refreshSchedule()">
+                Геолокация
+              </md-checkbox>
+              <md-button ng-click="main.selectNearestLocation()" class="md-raised md-primary">
+                Рядом
+              </md-button>
+            </div>
+            <div layout="column" flex>
+              <md-checkbox ng-model="main.$storage.showAllSchedules" ng-change="main.refreshSchedule()"
+                  md-no-ink>
+                Не скрывать старые
+              </md-checkbox>
+            </div>
+
           </div>
           <div id="selects">
             <md-select ng-model="main.$storage.locationIdFrom"
-                       ng-change="main.refreshSchedule()"
-                       ng-disabled="main.$storage.useGeoLocation">
+                       ng-change="main.refreshSchedule()">
               <md-option ng-value="location.id" ng-repeat="location in main.appDB.locations">
                 {{location.name}}
               </md-option>
