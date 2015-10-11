@@ -89,7 +89,7 @@
 
       ensureGeoLocationState();
       if(vm.$storage.useGeoLocation){
-        sortLocationsByDistanceAndSelectNearest();
+        sortLocationsByDistance();
       }
 
       vm.availableSchedules = vm.locationsById[vm.$storage.locationIdFrom].schedules;
@@ -117,7 +117,7 @@
       updateTimeAndDistanceToNearest();
     }
 
-    function sortLocationsByDistanceAndSelectNearest() {
+    function sortLocationsByDistance() {
       if (vm.currentPosition && vm.currentPosition.coords) {
         vm.appDB.locations = _.sortBy(vm.appDB.locations, function (location) {
           location.places = _.sortBy(location.places, function (place) {
@@ -133,7 +133,7 @@
     }
 
     function selectNearestLocation(){
-      if(sortLocationsByDistanceAndSelectNearest()) {
+      if(sortLocationsByDistance()) {
         vm.$storage.locationIdFrom = vm.appDB.locations[0].id;
         refreshSchedule();
       } else {
