@@ -26,19 +26,22 @@
           <md-checkbox ng-model="main.$storage.useGeoLocation" ng-change="main.refreshSchedule()">
             Геолокация
           </md-checkbox>
-          <md-select ng-model="main.locationFrom"
+
+          <md-select ng-model="main.locationIdFrom"
                      ng-change="main.refreshSchedule()"
                      ng-disabled="main.$storage.useGeoLocation">
-            <md-option ng-value="location" ng-repeat="location in main.appDB.locations">
+            <md-option ng-value="location.id" ng-repeat="location in main.appDB.locations">
               {{location.name}}
             </md-option>
           </md-select>
-          <md-select ng-model="main.locationTo"
+
+          <md-select ng-model="main.locationIdTo"
                      ng-change="main.refreshSchedule()">
-            <md-option ng-value="schedule.to" ng-repeat="schedule in main.locationFrom.schedules">
-              {{schedule.to}}
+            <md-option ng-value="schedule.to" ng-repeat="schedule in main.availableSchedules">
+              {{main.locationsById[schedule.to].name}}
             </md-option>
           </md-select>
+
           <div flex>
             <div layout="row">
               <div class="md-display-2" flex="20">
@@ -60,7 +63,7 @@
             </div>
           </div>
           <div layout="row">
-              <div flex="40">Время</div>
+              <div flex="33">Время</div>
               <div flex="30">Следующий через (минут)</div>
               <div >Осталось</div>
           </div>

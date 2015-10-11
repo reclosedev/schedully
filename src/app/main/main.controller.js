@@ -9,23 +9,25 @@
   function MainController($interval, $geolocation, $log, $localStorage) {
     var vm = this;
 
-    var _debug = true;
+    var _debug = false;
 
     vm.appDB = null;
     vm.timeWindowSeconds = 36 * 60 * 60; // two hours
-    vm.selectedSchedule = null;
     vm.closestTimes = [];
     vm.refreshSchedule = refreshSchedule;
     vm.currentPosition = $geolocation.position;
     vm.distance = null;
     vm.approximateArivalTime = null;
-    vm.locationFrom = null;
-    vm.locationTo = null;
+    vm.locationIdFrom = null;
+    vm.locationIdTo = null;
+    vm.availableSchedules = [];
+    vm.locationsById = {};
+    
     vm.$storage = $localStorage.$default({
       useGeoLocation: true
     });
-
-    var locationsById = {};
+    
+    var schedulesByLocations = {};
 
 
     activate();
@@ -47,16 +49,22 @@
       $log.info("Prepare data for new day");
 
       vm.appDB = _.cloneDeep(window.APP_DB);
-      vm.locationFrom = vm.appDB.locations[0];
-      vm.selectedSchedule = vm.locationFrom.schedules[0];
+      vm.locationIdFrom = vm.appDB.locations[0].id;
 
-      locationsById = {};
+      vm.locationsById = {};
+      schedulesByLocations = {};
+
       angular.forEach(vm.appDB.locations, function (location) {
-        locationsById[location.id] = location;
+        vm.locationsById[location.id] = location;
       });
+
       angular.forEach(vm.appDB.locations, function (location) {
         angular.forEach(location.schedules, function (schedule) {
-          //schedule.to = locationsById[schedule.to];
+          if (!(location.id in schedulesByLocations)){
+            schedulesByLocations[location.id] = {}
+          }
+          schedulesByLocations[location.id][schedule.to] = schedule;
+
           for (var i = 0; i < schedule.times.length; i++) {
             var date = createDate();
             date.setHours(schedule.times[i][0], schedule.times[i][1], 0, 0);
@@ -67,6 +75,7 @@
           }
         });
       });
+      vm.availableSchedules = vm.locationsById[vm.locationIdFrom].schedules;
     }
 
     function refreshSchedule() {
@@ -86,11 +95,17 @@
         sortNearestAndSelect();
       }
 
-      for (var i = 0; i < vm.selectedSchedule.times.length; i++){
-        var time = vm.selectedSchedule.times[i];
+      vm.availableSchedules = vm.locationsById[vm.locationIdFrom].schedules;
+      if (_.findIndex(vm.availableSchedules, 'to', vm.locationIdTo) === -1) {
+        vm.locationIdTo = vm.availableSchedules[0].to;
+      }
+
+      var schedule = selectedSchedule();
+      for (var i = 0; i < schedule.times.length; i++){
+        var time = schedule.times[i];
         var deltaNow = moment(time).diff(timeNow, 'seconds');
         if (deltaNow >= 0 && deltaNow < vm.timeWindowSeconds) {
-          var deltaNext = moment(vm.selectedSchedule.times[i + 1]).diff(time, 'minutes');
+          var deltaNext = moment(schedule.times[i + 1]).diff(time, 'minutes');
           vm.closestTimes.push({at: time, nextAfterMinutes: deltaNext});
         }
       }
@@ -108,7 +123,7 @@
           });
           return location.places[0].distance;
         });
-        vm.locationFrom = vm.appDB.locations[0];
+        vm.locationIdFrom = vm.appDB.locations[0].id;
       }
     }
 
@@ -128,7 +143,7 @@
       var virtualDate = createDate();
       virtualDate.setMinutes(0, delta, 0);
       vm.timeToClosest = virtualDate;
-      var distance = vm.locationFrom.places[0].distance;
+      var distance = vm.locationsById[vm.locationIdFrom].places[0].distance;
       if (typeof distance != "undefined"){
         vm.distance = (distance * 1000).toFixed(2);
       }
@@ -138,6 +153,10 @@
         var approximateArrivalSeconds = vm.distance / vm.currentPosition.coords.speed;
         vm.approximateArivalTime = createDate().setMinutes(0, approximateArrivalSeconds, 0);
       }
+    }
+
+    function selectedSchedule(){
+      return schedulesByLocations[vm.locationIdFrom][vm.locationIdTo];
     }
 
     function createDate(){
