@@ -98,7 +98,8 @@
 
         <md-content layout-padding md-scroll-y flex>
           <div ng-repeat="time in main.closestTimes track by time.at" layout="row"
-               ng-class="{'highlight': time.isTracked}">
+               ng-class="{'highlight': time.isTracked}"
+               ng-hide="time.isHidden">
             <div flex="20">{{time.at | date:"HH:mm"}}</div>
             <div flex="33">{{time.nextAfterMinutes}}</div>
             <div am-time-ago="time.at"></div>

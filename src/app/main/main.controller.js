@@ -101,21 +101,23 @@
       var timeNow = createDate();
       var schedule = selectedSchedule();
       var timeOffset = vm.locationsById[vm.$storage.locationIdFrom].places[0].time_offset || 0;
+      var showAll = vm.$storage.showAllSchedules;
 
       for (var i = 0; i < schedule.times.length; i++){
         var time = schedule.times[i];
         var deltaNow = moment(time).diff(timeNow, 'seconds') + timeOffset;
 
-        if (vm.$storage.showAllSchedules || deltaNow >= 0) {
-          var deltaNext = moment(schedule.times[i + 1]).diff(time, 'minutes');
-          if (deltaNext < 0) {
-            deltaNext = "n/a";
-          }
-          if (timeOffset) {
-            time = moment(time).add(timeOffset, 'seconds').toDate();
-          }
-          vm.closestTimes.push({at: time, nextAfterMinutes: deltaNext});
+        var deltaNext = moment(schedule.times[i + 1]).diff(time, 'minutes');
+        if (deltaNext < 0) {
+          deltaNext = "n/a";
         }
+        if (timeOffset) {
+          time = moment(time).add(timeOffset, 'seconds').toDate();
+        }
+        vm.closestTimes.push({
+          at: time, nextAfterMinutes: deltaNext,
+          isHidden: !showAll && deltaNow < 0
+        });
       }
       updateTimeAndDistanceToNearest();
     }
