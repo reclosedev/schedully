@@ -111,6 +111,9 @@
           if (deltaNext < 0) {
             deltaNext = "n/a";
           }
+          if (timeOffset) {
+            time = moment(time).add(timeOffset, 'seconds').toDate();
+          }
           vm.closestTimes.push({at: time, nextAfterMinutes: deltaNext});
         }
       }
@@ -176,13 +179,7 @@
           break;
         }
       }
-      if (delta <= 0) {
-        vm.timeToClosest = null;
-      } else {
-        var virtualDate = createDate();
-        virtualDate.setHours(0, 0, delta, 0);
-        vm.timeToClosest = virtualDate;
-      }
+      vm.timeToClosest = delta <= 0 ? null : delta;
     }
 
     function updateDistanceToNearest() {
@@ -196,8 +193,7 @@
         if (vm.currentPosition.coords && vm.currentPosition.coords.speed) {
           speed = vm.currentPosition.coords.speed;
         }
-        var approximateArrivalSeconds = vm.distance / speed;
-        vm.approximateETA = createDate().setHours(0, 0, approximateArrivalSeconds, 0);
+        vm.approximateETA = vm.distance / speed;
       }
     }
 

@@ -69,7 +69,8 @@
                   <td>Дистанция:</td><td>{{main.distance || "n/a"}} м</td>
                 </tr>
                 <tr>
-                  <td>ETA<span ng-if="!main.currentPosition.coords.speed"> (5 км/ч)</span>:</td><td>{{(main.approximateETA  | date:"hh:mm:ss") || "n/a"}}</td>
+                  <td>ETA<span ng-if="!main.currentPosition.coords.speed"> (5 км/ч)</span>:</td>
+                  <td>{{(main.approximateETA | secondsToDateTime | date:"HH:mm:ss") || "n/a"}}</td>
                 </tr>
                 <tr>
                   <td>Скорость:</td><td>{{main.currentPosition.coords.speed || "n/a"}} м/с</td>
