@@ -20,9 +20,17 @@
     <!-- css files will be automatically insert here -->
     <!-- endinject -->
     <!-- endbuild -->
+
+    <!-- Load vendor first to hide not rendered templates-->
+    <!-- build:js(src) scripts/vendor.js -->
+    <!-- bower:js -->
+    <!-- run `gulp inject` to automatically populate bower script dependencies -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
   </head>
   <body style="padding: 10px">
-    <div ng-controller="MainController as main" style="max-width: 600px;">
+    <div ng-controller="MainController as main" style="max-width: 600px;" ng-cloak>
       <div layout="column">
         <div id="options">
           <div layout="row">
@@ -98,12 +106,6 @@
         </md-content>
       </div>
     </div>
-
-    <!-- build:js(src) scripts/vendor.js -->
-    <!-- bower:js -->
-    <!-- run `gulp inject` to automatically populate bower script dependencies -->
-    <!-- endbower -->
-    <!-- endbuild -->
 
     <!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
     <!-- inject:js -->
