@@ -217,7 +217,7 @@ def main():
             times = [list(map(int, x.split(":"))) for x in times]
             entry["times"] = times
 
-    data = "(function(){window.APP_DB = %s})();" % json.dumps({"locations": locations})
+    data = "(function(){'use strict';\n window.APP_DB = %s;})();" % json.dumps({"locations": locations}, indent=2)
     with open(TARGET, "w") as fp:
         fp.write(data)
 

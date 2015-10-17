@@ -60,14 +60,14 @@
       angular.forEach(vm.appDB.locations, function (location) {
         angular.forEach(location.schedules, function (schedule) {
           if (!(location.id in schedulesByLocations)){
-            schedulesByLocations[location.id] = {}
+            schedulesByLocations[location.id] = {};
           }
           schedulesByLocations[location.id][schedule.to] = schedule;
 
           for (var i = 0; i < schedule.times.length; i++) {
             var date = createDate();
             date.setHours(schedule.times[i][0], schedule.times[i][1], 0, 0);
-            if (schedule.times[i][0] == 0) {
+            if (schedule.times[i][0] === 0) {
               date.setDate(date.getDate() + 1);
             }
             schedule.times[i] = date;
@@ -84,7 +84,7 @@
       if (_debug){
         vm.currentPosition = {
           coords: {latitude: 56.321376, longitude: 43.955503, speed: 2}
-        }
+        };
       }
 
       ensureGeoLocationState();
@@ -128,7 +128,7 @@
           location.places = _.sortBy(location.places, function (place) {
             var dist = haversine(vm.currentPosition.coords, place.location);
             place.distance = dist;
-            return dist
+            return dist;
           });
           return location.places[0].distance;
         });
@@ -147,7 +147,7 @@
             .clickOutsideToClose(true)
             .title('Ошибка получения геолокации')
             .content('Нет данных о положении. Ближайшее место не выбрано')
-            .ok('ОК')
+            .ok('ОК');
         } else {
           var confirm = $mdDialog.confirm()
             .title('Выбор ближайшего места')
@@ -186,7 +186,7 @@
 
     function updateDistanceToNearest() {
       var distance = vm.locationsById[vm.$storage.locationIdFrom].places[0].distance;
-      if (typeof distance != "undefined") {
+      if (typeof distance !== "undefined") {
         vm.distance = (distance * 1000).toFixed(2);
       }
 
