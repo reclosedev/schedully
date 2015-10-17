@@ -62,7 +62,7 @@
           <div layout="row">
             <div flex>
               <small flex class="md-caption gray">{{main.locationsById[main.$storage.locationIdFrom].places[0].name}}</small>
-              <div class="md-display-2" >{{(main.timeToClosest | date:"mm:ss") || "Пусто"}}</div>
+              <div class="md-display-2" >{{(main.timeToClosest | secondsToDateTime | date:"mm:ss") || "Пусто"}}</div>
             </div>
 
             <div align="right" flex layout="column">
