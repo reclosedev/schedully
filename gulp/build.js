@@ -2,6 +2,7 @@
 
 var path = require('path');
 var gulp = require('gulp');
+var manifest = require('gulp-manifest');
 var conf = require('./conf');
 
 var $ = require('gulp-load-plugins')({
@@ -90,4 +91,17 @@ gulp.task('clean', function (done) {
   $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/')], done);
 });
 
-gulp.task('build', ['html', 'fonts', 'other', 'manifest']);
+gulp.task('compile', ['html', 'fonts', 'other']);
+
+gulp.task('manifest', ['compile'], function(){
+  gulp.src([path.join(conf.paths.dist, '/**')], { base: './dist' })
+    .pipe(manifest({
+      hash: true,
+      network: ['*'],
+      filename: 'app.manifest',
+      exclude: 'app.manifest'
+     }))
+    .pipe(gulp.dest(conf.paths.dist));
+});
+
+gulp.task('build', ['manifest']);
