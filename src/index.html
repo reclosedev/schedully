@@ -43,7 +43,7 @@
           <div id="selects">
             <md-select ng-model="main.$storage.locationIdFrom"
                        ng-change="main.refreshSchedule()">
-              <md-option ng-value="location.id" ng-repeat="location in main.appDB.locations">
+              <md-option ng-value="location.id" ng-repeat="location in main.appDB.locations track by location.id">
                 {{location.name}}
               </md-option>
             </md-select>
@@ -86,7 +86,7 @@
         </div>
 
         <md-content layout-padding md-scroll-y flex>
-          <div ng-repeat="time in main.closestTimes" layout="row"
+          <div ng-repeat="time in main.closestTimes track by time.at" layout="row"
                ng-class="{'highlight': time.isTracked}">
             <div flex="20">{{time.at | date:"HH:mm"}}</div>
             <div flex="33">{{time.nextAfterMinutes}}</div>
