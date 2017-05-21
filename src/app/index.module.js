@@ -3,7 +3,7 @@
 
   angular
     .module('schedully', [
-      'ngTouch', 'ngMaterial', 'angularMoment',
+      'ngMaterial', 'angularMoment',
       'ngGeolocation', 'ngStorage'
     ]);
 
